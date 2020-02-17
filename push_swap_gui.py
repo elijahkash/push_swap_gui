@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import scrolledtext
 from tkinter import filedialog
 import ttk
-import subprocess # TODO: here?
 
 import game_info
 
@@ -31,8 +30,8 @@ class PushSwapGUI:
 		self.init_gui()
 		self.update_labels()
 		self.grid_gui()
-		self.draw()
 		self.master.update()
+		self.draw()
 
 	def init_gui(self):
 		self.frame_root = ttk.Frame(self.master, padding='5 2 5 2')
@@ -124,7 +123,7 @@ class PushSwapGUI:
 		self.entry_range_b.grid(row=6, column=0)
 		self.label_range_a.grid(row=5, column=2, **STICKY_FULL)
 		self.label_range_b.grid(row=6, column=2, **STICKY_FULL)
-		self.switch_builtin.grid(row=7, columnspan=3, **STICKY_FULL)
+		self.switch_builtin.grid(row=7, column=0, **STICKY_FULL)
 		self.label_file_name.grid(row=8, column=1, **STICKY_FULL)
 		self.entry_file_name.grid(
 			in_=self.frame_menu, row=9, columnspan=3, **STICKY_FULL
@@ -145,7 +144,7 @@ class PushSwapGUI:
 			text=f'speed (delay between ops in msec): {self.game_info.speed}'
 		)
 		self.label_op_num.config(
-			text=f'operations count = {self.game_info.op_count}'
+			text=f'operations count = {len(self.game_info.op_list)}'
 		)
 		self.label_curr_op.config(
 			text=f'current operation: {self.game_info.cur_op}'
@@ -158,7 +157,9 @@ class PushSwapGUI:
 		self.master.destroy()
 
 	def calc(self):
-		pass
+		self.reset()
+		self.game_info.calc(self.entry_file_name.get())
+		self.update_labels()
 
 	def speed_down(self):
 		self.game_info.speed_down()
@@ -169,7 +170,8 @@ class PushSwapGUI:
 		self.update_labels()
 
 	def game(self):
-		pass
+		self.game_info.start_game()
+		self.next_op(self.game_info.game)
 
 	def reset(self):
 		self.game_info.reset()
@@ -198,7 +200,41 @@ class PushSwapGUI:
 			self.entry_file_name.insert(0, tmp)
 
 	def draw(self):
-		pass
+		self.canvas_a.delete('all')
+		self.canvas_b.delete('all')
+		if len(self.game_info.src_data) == 0:
+			return
+		delta_x = (self.canvas_a.winfo_width() - 10) \
+			/ len(self.game_info.src_data)
+		delta_y = (self.canvas_a.winfo_height() - 10) \
+			/ len(self.game_info.src_data)
+		for index, x in enumerate(self.game_info.st.stack_a):
+			self.draw_item(self.canvas_a, index, x, delta_x, delta_y)
+		for index, x in enumerate(self.game_info.st.stack_b):
+			self.draw_item(self.canvas_b, index, x, delta_x, delta_y)
+
+	def draw_item(self, canvas, index, x, delta_x, delta_y):
+		canvas.create_rectangle(
+			0 + 5, index * delta_y + 5,
+			x * delta_x + 5, (index + 1) * delta_y + 5,
+			width=0,
+			fill=self.game_info.colors[x - 1]
+		)
+
+	def next_op(self, game):
+		if self.game_info.cur_op == len(self.game_info.op_list):
+			self.update_labels()
+			self.draw()
+			return
+		if game != self.game_info.game:
+			return
+		self.game_info.next_op()
+		if self.game_info.speed or self.game_info.cur_op % 128 == 0:
+			self.update_labels()
+			self.draw()
+			self.master.update()
+		self.cmd_list_insert(self.game_info.op_list[self.game_info.cur_op - 1])
+		self.master.after(self.game_info.speed, self.next_op, game)
 
 	def cmd_list_clean(self):
 		self.cmd_list.config(state='normal')

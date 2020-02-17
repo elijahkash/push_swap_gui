@@ -2,6 +2,7 @@ import random
 import time
 from colour import Color
 from tkinter import IntVar
+import subprocess
 
 import push_swap_stacks
 
@@ -37,7 +38,6 @@ class GameInfo:
 		self.cur_op = 0
 		self.game = 0
 		self.speed = DEFAULT_SPEED
-		self.op_count = 0
 		self.stack_state = 0
 		self.use_builtin = IntVar(value=1)
 
@@ -45,6 +45,7 @@ class GameInfo:
 		self.cur_op = 0
 		self.game = 0
 		self.st.new_data(self.src_data)
+		self.update_state()
 
 	def generate_data(self, a, b):
 		self.src_data = [x for x in range(a, b)]
@@ -62,6 +63,31 @@ class GameInfo:
 			self.speed = MINIMUM_SPEED
 		elif self.speed == 0:
 			self.speed = 1
+
+	def calc(self, filename):
+		self.op_list.clear()
+		if self.use_builtin.get():
+			self.op_list = self.st.push_swap()
+		else:
+			push_swap = subprocess.run(
+				[filename, *[str(x) for x in self.src_data]],
+				capture_output=True
+			)
+			self.op_list = push_swap.stdout.decode('utf-8').rstrip().split('\n')
+		self.update_state()
+
+	def start_game(self):
+		if self.game or self.cur_op == len(self.op_list):
+			self.game = 0
+		else:
+			self.game = time.time()
+
+	def next_op(self):
+		self.st.cmd[self.op_list[self.cur_op]]()
+		self.cur_op += 1
+		if (self.cur_op == len(self.op_list)):
+			self.update_state()
+			self.game = 0
 
 	def update_state(self):
 		if self.cur_op != len(self.op_list):
