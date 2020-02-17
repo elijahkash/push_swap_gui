@@ -8,8 +8,8 @@ class PushSwapStacks:
 
 	def __init__(self, initstate):
 		""" initstate: Iterable[_T]=..."""
-		self.stack_a = deque.deque()
-		self.stack_b = deque.deque()
+		self.stack_a = deque()
+		self.stack_b = deque()
 		self.new_data(initstate)
 		self.cmd = {
 			'pa': self.pa,

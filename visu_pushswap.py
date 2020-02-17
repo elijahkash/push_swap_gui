@@ -8,6 +8,8 @@ from tkinter import filedialog
 import ttk
 import subprocess
 
+from game_info import GameInfo
+
 # TODO: depend from display?
 DEFAULT_WIN_SIZE_X = 1000
 DEFAULT_WIN_SIZE_Y = 1000

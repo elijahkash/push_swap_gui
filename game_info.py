@@ -15,10 +15,11 @@ DEFAULT_SPEED = 500
 MINIMUM_SPEED = 1000
 SPEED_DELTA = 1.5
 
+STATE_TITLE = 'stack_state: '
 STACK_STATE = [
-	{'text': '...', 'foreground': 'black'},
-	{'text': 'OK', 'foreground': 'green4'},
-	{'text': 'KO', 'foreground': 'red2'}
+	{'text': STATE_TITLE + '...', 'foreground': 'black'},
+	{'text': STATE_TITLE + 'OK', 'foreground': 'green4'},
+	{'text': STATE_TITLE + 'KO', 'foreground': 'red2'}
 ]
 STATE_NONE = 0
 STATE_OK = 1
@@ -49,7 +50,7 @@ class GameInfo:
 		self.src_data = [x for x in range(a, b)]
 		random.shuffle(self.src_data)
 		self.colors = list(
-			Color(COLOR_START).range_to(Color(COLOR_END), a - b)
+			Color(COLOR_START).range_to(Color(COLOR_END), b - a)
 		)
 
 	def speed_up(self):
