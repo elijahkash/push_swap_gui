@@ -2,139 +2,16 @@
 
 # visualizer for push-swap project
 
-import random as rand
-import time
 import tkinter as tk
 from tkinter import scrolledtext
 from tkinter import filedialog
 import ttk
-import collections as coll
 import subprocess
-from colour import Color
 
 # TODO: depend from display?
 DEFAULT_WIN_SIZE_X = 1000
 DEFAULT_WIN_SIZE_Y = 1000
-WIN_TITLE = 'py_push-swap'
-
-DEFAULT_RANGE_A = 0
-DEFAULT_RANGE_B = 100
-
-COLOR_START = "limegreen"
-COLOR_END = "orangered"
-
-SPEED_DELTA = 1.5
-
-
-class PushSwapStacks:
-	"""
-	describe stacks for push-swap algorithm
-	"""
-
-	def __init__(self, initstate):
-		""" initstate: Iterable[_T]=..."""
-		self.stack_a = coll.deque()
-		self.stack_b = coll.deque()
-		self.new_data(initstate)
-		self.cmd = {
-			'pa': self.pa,
-			'pb': self.pb,
-			'sa': self.sa,
-			'sb': self.sb,
-			'ss': self.ss,
-			'ra': self.ra,
-			'rb': self.rb,
-			'rr': self.rr,
-			'rra': self.rra,
-			'rrb': self.rrb,
-			'rrr': self.rrr
-		}
-
-	def new_data(self, initstate):
-		self.stack_a.clear()
-		self.stack_b.clear()
-		tmp = sorted(initstate)
-		self.stack_a.extend([tmp.index(x) + 1 for x in initstate])
-
-	def pa(self):
-		if len(self.stack_b):
-			self.stack_a.appendleft(self.stack_b.popleft())
-
-	def pb(self):
-		if len(self.stack_a):
-			self.stack_b.appendleft(self.stack_a.popleft())
-
-	def ra(self):
-		if len(self.stack_a):
-			self.stack_a.rotate(-1)
-
-	def rb(self):
-		if len(self.stack_b):
-			self.stack_b.rotate(-1)
-
-	def rr(self):
-		self.ra()
-		self.rb()
-
-	def rra(self):
-		if len(self.stack_a):
-			self.stack_a.rotate(1)
-
-	def rrb(self):
-		if len(self.stack_b):
-			self.stack_b.rotate(1)
-
-	def rrr(self):
-		self.rra()
-		self.rrb()
-
-	def sa(self):
-		self.stack_a[0], self.stack_a[1] = self.stack_a[1], self.stack_a[0]
-
-	def sb(self):
-		self.stack_b[0], self.stack_b[1] = self.stack_b[1], self.stack_b[0]
-
-	def ss(self):
-		self.sa()
-		self.sb()
-
-
-class GameInfo:
-	def __init__(self):
-		self.src_data = []
-		self.colors = []
-		self.generate_data(DEFAULT_RANGE_A, DEFAULT_RANGE_B)
-		self.st = PushSwapStacks(self.src_data)
-		self.op_list = []
-		self.cur_op = 0
-		self.game = 0
-		self.speed = 500
-		self.op_count = 0
-		self.stack_state = ''
-		self.use_builtin = tk.IntVar()
-		self.use_builtin.set(1)
-
-	def reset(self):
-		self.cur_op = 0
-		self.game = 0
-		self.st.new_data(self.src_data)
-
-	def generate_data(self, a, b):
-		self.src_data = [x for x in range(a, b)]
-		rand.shuffle(self.src_data)
-		self.colors = list(
-			Color(COLOR_START).range_to(Color(COLOR_END), a - b)
-		)
-
-	def speed_up(self):
-		self.speed = int(self.speed / SPEED_DELTA)
-
-	def speed_down(self):
-		self.speed = int(round(self.speed * SPEED_DELTA))
-		if self.speed > 1000:
-			self.speed = 1000
-		elif self.speed == 0:
-			self.speed = 1
+WIN_TITLE = 'push-swap_python'
 
 
 class VisuPS(ttk.Frame):
@@ -260,15 +137,15 @@ class VisuPS(ttk.Frame):
 		self.op_num.grid(row=14, column=0, columnspan=3, **STICKY_FULL)
 		self.stack_state.grid(row=15, column=0, columnspan=3, **STICKY_FULL)
 
-	def visu_exit(self):
+	def btn_exit(self):
 		tk.Tk.quit(self.root)
 
-	def choose_file(self):
+	def btn_choose_file(self):
 		tmp = filedialog.askopenfilename()
 		self.push_swap_file_name.delete(0, tk.END)
 		self.push_swap_file_name.insert(0, tmp)
 
-	def builtin_click(self):
+	def switch_builtin(self):
 		if self.game_info.use_builtin.get():
 			self.open_file.config(state=tk.DISABLED)
 			self.push_swap_file_name.config(state=tk.DISABLED)
@@ -276,14 +153,15 @@ class VisuPS(ttk.Frame):
 			self.open_file.config(state=tk.NORMAL)
 			self.push_swap_file_name.config(state=tk.NORMAL)
 
-	def speed_up(self):
+	def btn_speed_up(self):
 		self.game_info.speed_up()
-		self.speed.config(
-			text=f'speed (delay between ops in msec): {self.game_info.speed}'
-		)
+		self.update_labels()
 
-	def speed_down(self):
+	def btn_speed_down(self):
 		self.game_info.speed_down()
+		self.update_labels()
+
+	def update_labels(self):
 		self.speed.config(
 			text=f'speed (delay between ops in msec): {self.game_info.speed}'
 		)
@@ -396,7 +274,6 @@ class VisuPS(ttk.Frame):
 
 
 def main():
-	rand.seed(time.time())
 	app = VisuPS(tk.Tk())
 	app.root.mainloop()
 	return 0
