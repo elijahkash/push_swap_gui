@@ -31,6 +31,10 @@ class PushSwapStacks:
 		tmp = sorted(initstate)
 		self.stack_a.extend([tmp.index(x) + 1 for x in initstate])
 
+	def do_cmd(self, op):
+		self.cmd[op]()
+		return op
+
 	def pa(self):
 		if len(self.stack_b):
 			self.stack_a.appendleft(self.stack_b.popleft())
@@ -72,6 +76,3 @@ class PushSwapStacks:
 	def ss(self):
 		self.sa()
 		self.sb()
-
-	def push_swap(self):
-		return []

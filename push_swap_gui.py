@@ -1,3 +1,4 @@
+import time
 import tkinter as tk
 from tkinter import scrolledtext
 from tkinter import filedialog
@@ -283,6 +284,12 @@ class PushSwapGUI:
 		self.cmd_list.config(state='disabled')
 
 	def action_resize(self, event):
+		self.resize_id = time.time()
+		self.master.after(10, self.delay_action_resize, self.resize_id)
+
+	def delay_action_resize(self, action_id):
+		if action_id != self.resize_id:
+			return
 		self.draw()
 
 	def show_tips(self):

@@ -5,6 +5,7 @@ from tkinter import IntVar
 import subprocess
 
 import push_swap_stacks
+import push_swap_algo
 
 DEFAULT_RANGE_A = 0
 DEFAULT_RANGE_B = 100
@@ -34,7 +35,7 @@ class GameInfo:
 		random.seed(time.time())
 		self.generate_data(DEFAULT_RANGE_A, DEFAULT_RANGE_B)
 		self.st = push_swap_stacks.PushSwapStacks(self.src_data)
-		self.op_list = self.st.push_swap()
+		self.op_list = push_swap_algo.push_swap(self.src_data)
 		self.cur_op = 0
 		self.game = 0
 		self.speed = DEFAULT_SPEED
@@ -67,7 +68,7 @@ class GameInfo:
 	def calc(self, filename):
 		self.op_list.clear()
 		if self.use_builtin.get():
-			self.op_list = self.st.push_swap()
+			self.op_list = push_swap_algo.push_swap(self.src_data)
 		else:
 			push_swap = subprocess.run(
 				[filename, *[str(x) for x in self.src_data]],
