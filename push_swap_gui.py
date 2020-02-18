@@ -1,13 +1,10 @@
 import tkinter as tk
 from tkinter import scrolledtext
 from tkinter import filedialog
+from tkinter import messagebox
 import ttk
 
 import game_info
-
-# TODO: depend from display?
-# w = root.winfo_screenwidth()
-# h = root.winfo_screenheight()
 
 DEFAULT_WIN_SIZE_X = 1000
 DEFAULT_WIN_SIZE_Y = 1000
@@ -16,6 +13,15 @@ MIX_SIZE_Y = 650
 
 WIN_TITLE = 'push-swap_python'
 APP_THEME = 'aqua'
+
+TIPS_TEXT = """
+1) You may resize window, if you want!
+2) If you are working with a custom
+push-swap binary, each time you click
+the 'calculate' button, this file is
+called, so each time you get the result
+of a actual push-swap!
+"""
 
 
 class PushSwapGUI:
@@ -32,6 +38,7 @@ class PushSwapGUI:
 		self.grid_gui()
 		self.master.update()
 		self.draw()
+		self.master.bind('<Configure>', self.action_resize, self)
 
 	def init_gui(self):
 		self.frame_root = ttk.Frame(self.master, padding='5 2 5 2')
@@ -43,6 +50,9 @@ class PushSwapGUI:
 		self.frame_menu = ttk.Frame(self.frame_root)
 		self.button_quit = ttk.Button(
 			self.frame_menu, text='Quit', command=self.quit_from_app
+		)
+		self.button_show_tips = ttk.Button(
+			self.frame_menu, text='show tips', command=self.show_tips
 		)
 		self.button_calc = ttk.Button(
 			self.frame_menu, text='Calculate', command=self.calc
@@ -112,7 +122,8 @@ class PushSwapGUI:
 			self.frame_menu.columnconfigure(i, weight=1)
 		for i in range(0, 90):
 			self.frame_menu.rowconfigure(i, weight=1)
-		self.button_quit.grid(row=0, columnspan=3, **STICKY_FULL)
+		self.button_quit.grid(row=0, columnspan=2, **STICKY_FULL)
+		self.button_show_tips.grid(row=0, column=2, **STICKY_FULL)
 		self.button_calc.grid(row=1, columnspan=3, **STICKY_FULL)
 		self.button_speed_down.grid(row=2, column=0, **STICKY_FULL)
 		self.button_game.grid(row=2, column=1, **STICKY_FULL)
@@ -158,7 +169,13 @@ class PushSwapGUI:
 
 	def calc(self):
 		self.reset()
-		self.game_info.calc(self.entry_file_name.get())
+		try:
+			self.game_info.calc(self.entry_file_name.get())
+		except Exception:
+			messagebox.showerror(
+				'Error',
+				'Whoooops!\nThere is a problem with your push-swap!\nCheck it!'
+			)
 		self.update_labels()
 
 	def speed_down(self):
@@ -171,7 +188,9 @@ class PushSwapGUI:
 
 	def game(self):
 		self.game_info.start_game()
-		self.next_op(self.game_info.game)
+		self.update_labels()
+		if self.game_info.game:
+			self.next_op(self.game_info.game)
 
 	def reset(self):
 		self.game_info.reset()
@@ -180,8 +199,17 @@ class PushSwapGUI:
 		self.cmd_list_clean()
 
 	def generate_new_data(self):
-		a = int(self.entry_range_a.get())
-		b = int(self.entry_range_b.get())
+		try:
+			a = int(self.entry_range_a.get())
+			b = int(self.entry_range_b.get())
+			if a >= b:
+				raise ValueError
+		except ValueError:
+			messagebox.showerror(
+				'Error',
+				'Are you kidding me?\nWrong range!'
+			)
+			return
 		self.game_info.generate_data(a, b)
 		self.reset()
 
@@ -228,12 +256,19 @@ class PushSwapGUI:
 			return
 		if game != self.game_info.game:
 			return
-		self.game_info.next_op()
+		self.cmd_list_insert(self.game_info.op_list[self.game_info.cur_op])
+		try:
+			self.game_info.next_op()
+		except KeyError:
+			messagebox.showerror(
+				'Error',
+				'Your push-swap returned a nonexistent command!\nCheck it!'
+			)
+			return
 		if self.game_info.speed or self.game_info.cur_op % 128 == 0:
 			self.update_labels()
 			self.draw()
 			self.master.update()
-		self.cmd_list_insert(self.game_info.op_list[self.game_info.cur_op - 1])
 		self.master.after(self.game_info.speed, self.next_op, game)
 
 	def cmd_list_clean(self):
@@ -247,11 +282,23 @@ class PushSwapGUI:
 		self.cmd_list.yview(tk.END)
 		self.cmd_list.config(state='disabled')
 
+	def action_resize(self, event):
+		self.draw()
+
+	def show_tips(self):
+		messagebox.showinfo(
+			'Tips',
+			TIPS_TEXT
+		)
+
 
 def main():
 	master = tk.Tk()
 	PushSwapGUI(master)
-	master.mainloop()
+	try:
+		master.mainloop()
+	except KeyboardInterrupt:
+		exit(0)
 	return 0
 
 
