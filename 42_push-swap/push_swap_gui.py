@@ -4,6 +4,7 @@ from tkinter import scrolledtext
 from tkinter import filedialog
 from tkinter import messagebox
 import ttk
+import webbrowser
 
 import game_info
 
@@ -12,7 +13,7 @@ DEFAULT_WIN_SIZE_Y = 1000
 MIN_SIZE_X = 700
 MIX_SIZE_Y = 650
 
-WIN_TITLE = 'push-swap_python'
+WIN_TITLE = '42_push-swap'
 APP_THEME = 'aqua'
 
 TIPS_TEXT = """
@@ -101,8 +102,11 @@ class PushSwapGUI:
 		self.label_poweredby = ttk.Label(
 			self.frame_menu, text='powered by Ilya Kashnitkiy', anchor=tk.CENTER
 		)
-		self.label_git_link = ttk.Label(
-			self.frame_menu, text='github.com/elijahkash', anchor=tk.CENTER
+		self.button_github = ttk.Button(
+			self.frame_menu, command=self.github, text='github.com/elijahkash'
+		)
+		self.button_like = ttk.Button(
+			self.frame_menu, command=self.like, text='Like this app?'
 		)
 
 	def grid_gui(self):
@@ -125,18 +129,18 @@ class PushSwapGUI:
 			self.frame_menu.rowconfigure(i, weight=1)
 		self.button_quit.grid(row=0, columnspan=2, **STICKY_FULL)
 		self.button_show_tips.grid(row=0, column=2, **STICKY_FULL)
-		self.button_calc.grid(row=1, columnspan=3, **STICKY_FULL)
+		self.button_reset.grid(row=1, columnspan=3, **STICKY_FULL)
 		self.button_speed_down.grid(row=2, column=0, **STICKY_FULL)
 		self.button_game.grid(row=2, column=1, **STICKY_FULL)
 		self.button_speed_up.grid(row=2, column=2, **STICKY_FULL)
-		self.button_reset.grid(row=3, columnspan=3, **STICKY_FULL)
+		self.button_calc.grid(row=3, columnspan=3, **STICKY_FULL)
 		self.button_generate_new_data.grid(row=4, columnspan=3, **STICKY_FULL)
-		self.entry_range_a.grid(row=5, column=0)
-		self.entry_range_b.grid(row=6, column=0)
-		self.label_range_a.grid(row=5, column=2, **STICKY_FULL)
-		self.label_range_b.grid(row=6, column=2, **STICKY_FULL)
+		self.entry_range_a.grid(row=5, column=0, **STICKY_FULL)
+		self.entry_range_b.grid(row=6, column=0, **STICKY_FULL)
+		self.label_range_a.grid(row=5, column=1, **STICKY_FULL)
+		self.label_range_b.grid(row=6, column=1, **STICKY_FULL)
 		self.switch_builtin.grid(row=7, column=0, **STICKY_FULL)
-		self.label_file_name.grid(row=8, column=1, **STICKY_FULL)
+		self.label_file_name.grid(row=8, column=0, **STICKY_FULL)
 		self.entry_file_name.grid(
 			in_=self.frame_menu, row=9, columnspan=3, **STICKY_FULL
 		)
@@ -148,7 +152,8 @@ class PushSwapGUI:
 			row=16, column=0, columnspan=3, **STICKY_FULL
 		)
 		self.label_poweredby.grid(row=40, column=0, columnspan=3, **STICKY_FULL)
-		self.label_git_link.grid(row=41, column=0, columnspan=3, **STICKY_FULL)
+		self.button_github.grid(row=41, column=1, **STICKY_FULL)
+		self.button_like.grid(row=42, column=1, sticky=(tk.N, tk.S))
 
 	def update_labels(self):
 		self.button_game.config(text='||' if self.game_info.game else '▷')
@@ -292,22 +297,23 @@ class PushSwapGUI:
 			return
 		self.draw()
 
+	def github(self):
+		webbrowser.open('https://github.com/elijahkash/42_push-swap')
+
+	def like(self):
+		messagebox.showinfo(
+			'Like this app?',
+			"""
+			Thanks! I am glad to hear it!
+			If you want to support me,
+			use the "sponsors" button
+			on the project page on the
+			github!
+			"""
+		)
+
 	def show_tips(self):
 		messagebox.showinfo(
 			'Tips',
 			TIPS_TEXT
 		)
-
-
-def main():
-	master = tk.Tk()
-	PushSwapGUI(master)
-	try:
-		master.mainloop()
-	except KeyboardInterrupt:
-		exit(0)
-	return 0
-
-
-if __name__ == '__main__':
-	exit(main())
