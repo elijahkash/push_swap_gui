@@ -15,7 +15,24 @@ Implementation of push-swap (42-school project) on python with GUI.
 
 ## How to use:
 
+### Install
 
+This is a simple python3 package already added to PyPI. Therefore, to use you do not need to "clone" it from github. Just open terminal and run:
+
+`> pip3 install push_swap_gui`
+
+> If you have just started at school42 and have never encountered python and have difficulty installing the application, visit this page: https://github.com/elijahkash/push_swap_gui/wiki/FAQ_for_beginners
+
+### Launch
+
+Now you can run this application from any directory, and in two ways:
+
+- `> python3 -m push_swap_gui`
+- `> push_swap_gui`
+
+### Uninstall
+
+`> pip3 uninstall push_swap_gui`
 
 ## License
 - See the [LICENSE](./LICENSE) file for license rights and limitations (MIT).
