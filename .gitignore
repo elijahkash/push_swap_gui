@@ -2,3 +2,7 @@
 __pycache__
 .vscode
 testenv
+
+push_swap_gui.egg-info
+dist
+build

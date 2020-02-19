@@ -2,7 +2,7 @@
 
 import tkinter as tk
 
-import push_swap_gui
+from . import push_swap_gui
 
 
 def main():
@@ -12,8 +12,8 @@ def main():
 		master.mainloop()
 	except KeyboardInterrupt:
 		exit(0)
-	return 0
+	exit(0)
 
 
 if __name__ == '__main__':
-	exit(main())
+	main()

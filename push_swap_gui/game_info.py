@@ -4,8 +4,8 @@ from colour import Color
 from tkinter import IntVar
 import subprocess
 
-import push_swap_stacks
-import push_swap_algo
+from . import push_swap_stacks
+from . import push_swap_algo
 
 DEFAULT_RANGE_A = 0
 DEFAULT_RANGE_B = 100

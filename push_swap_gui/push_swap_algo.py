@@ -1,4 +1,4 @@
-import push_swap_stacks
+from . import push_swap_stacks
 
 
 def push_swap(src_data):

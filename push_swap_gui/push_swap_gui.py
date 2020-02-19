@@ -6,7 +6,7 @@ from tkinter import messagebox
 import ttk
 import webbrowser
 
-import game_info
+from . import game_info
 
 DEFAULT_WIN_SIZE_X = 1000
 DEFAULT_WIN_SIZE_Y = 1000
