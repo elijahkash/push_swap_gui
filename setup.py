@@ -8,7 +8,7 @@ setuptools.setup(
     version='1.0',
     author='Ilya Kashnitskiy',
     author_email='elijahkash.code@gmail.com',
-    description='Implementation of push-swap (42-school project) on python with gui and vizualisation',
+    description='Implementation of push-swap (42-school project) on python with GUI.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/elijahkash/push_swap_gui',
