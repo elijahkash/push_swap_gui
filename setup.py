@@ -29,5 +29,5 @@ setuptools.setup(
 			'push_swap_gui = push_swap_gui.__main__:main',
 		]
 	},
-	keywords='42 push_swap'
+	keywords='42 push_swap push-swap'
 )
