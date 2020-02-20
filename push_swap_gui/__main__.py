@@ -2,12 +2,12 @@
 
 import tkinter as tk
 
-from . import push_swap_gui
+from . import app_gui
 
 
 def main():
 	master = tk.Tk()
-	push_swap_gui.PushSwapGUI(master)
+	app_gui.PushSwapGUI(master)
 	try:
 		master.mainloop()
 	except KeyboardInterrupt:

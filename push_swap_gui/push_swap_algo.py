@@ -3,7 +3,7 @@ from . import push_swap_stacks
 
 def push_swap(src_data):
 	st = push_swap_stacks.PushSwapStacks(src_data)
-	res = [] if len(src_data) > 3 else sort_three(st)
+	res = [] if len(src_data) != 3 else sort_three(st)
 	sorted_seq = max_sorted_seq(st)
 	while len(st.stack_a) > len(sorted_seq):
 		if st.stack_a[0] not in sorted_seq:
