@@ -30,6 +30,22 @@ Now you can run this application from any directory, and in two ways:
 - `> python3 -m push_swap_gui`
 - `> push_swap_gui`
 
+### Import
+
+You also may `import push_swap_gui` as a module. In this case, you can:
+
+- `push_swap_gui.PushSwapGUI(master)` : create a window with app in tkinter item, transmitted as `master`
+- `push_swap_gui.push_swap(src_data)` : this func get iterable with source data, and return list with comands (push-swap solve)
+
+Example:
+```
+>>> import push_swap_gui
+>>> a = [1, -1, 3, 7, 2, 9, 12]
+>>> push_swap_gui.push_swap(a)
+['pb', 'ra', 'ra', 'ra', 'pb', 'ra', 'ra', 'ra', 'pa', 'pa', 'rra']
+>>>
+```
+
 ### Uninstall
 
 `> pip3 uninstall push_swap_gui`
