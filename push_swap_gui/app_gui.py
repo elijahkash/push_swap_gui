@@ -14,7 +14,7 @@ MIN_SIZE_X = 700
 MIX_SIZE_Y = 650
 
 WIN_TITLE = '42_push-swap'
-APP_THEME = 'aqua'
+APP_THEME = 'classic'
 
 TIPS_TEXT = """
 1) You may resize window, if you want!
