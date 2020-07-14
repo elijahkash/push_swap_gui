@@ -5,7 +5,7 @@ with open('README.md', 'r') as readme:
 
 setuptools.setup(
     name='push_swap_gui',
-    version='1.0',
+    version='1.1',
     author='Ilya Kashnitskiy',
     author_email='elijahkash.code@gmail.com',
     description='Implementation of push-swap (42-school project) on python with GUI.',
