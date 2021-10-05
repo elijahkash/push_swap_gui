@@ -17,9 +17,11 @@ Implementation of push-swap (42-school project) on python with GUI.
 
 ### Install
 
-This is a simple python3 package already added to PyPI. Therefore, to use you do not need to "clone" it from github. Just open terminal and run:
+This is a simple python3 package already added to PyPI. Therefore, to use you do not need to "clone" it from github. Then just open terminal and run:
 
 `> pip3 install push_swap_gui`
+
+> In some cases this may fail. Then, for example on Ubuntu 20.04, exec `> sudo apt install python3-tk` and try again.
 
 > If you have just started at school42 and have never encountered python and have difficulty installing the application, visit this page: https://github.com/elijahkash/push_swap_gui/wiki/FAQ_for_beginners
 
